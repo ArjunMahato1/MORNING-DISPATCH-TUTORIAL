@@ -46,7 +46,25 @@ return (
 <p className="text-sm text-gray-400">Phone:8271620566</p>
 </div>
 </div>
+{/* Social Media and Copyright */}
+<div className="pt-6 mt-8 text-sm text-center text-gray-500 border-t border-gary-700">
+    <p>Follow us on</p>
+    <div className="flex justify-center mt-3 space -x-4">
+        <a href="#" className="hover:text-white">
+            Facebook
+        </a>
+        <a href="#" className="hover:text-white">
+            Instagram
+        </a>
+        <a href="#" className="hover:text-white">
+            Twitter
+        </a>
 
+    </div>
+    <p className="mt-4">@Copy; {new Date().getFullYear()} Daily Newzz. All rights reserved
+
+    </p>
+</div>
 </div>
 )
 }
