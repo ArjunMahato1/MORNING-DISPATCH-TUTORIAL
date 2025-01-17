@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInFailure, signInStart, signInSucess } from '@/redux/user/userSlice';
 
 // Fix the schema for email validation
 const formSchema = z.object({
@@ -27,8 +29,8 @@ const formSchema = z.object({
 const SignInForm = () => {
   const {toast} = useToast()  // Make sure you have useToast properly set up
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const dispatch = useDispatch();
+  const {loading,error:errorMessage} =useSelector((state) => state.user)
 
   const form = useReactHookForm({
     resolver: zodResolver(formSchema),
@@ -41,8 +43,7 @@ const SignInForm = () => {
   // Submit form
   async function onSubmit(values) {
     try {
-      setLoading(true);
-      setErrorMessage(null);
+      dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -53,20 +54,21 @@ const SignInForm = () => {
       const data = await res.json();
 
       if (data.success === false) {
-        setLoading(false);
+        
         toast({ title: "Sign in failed! Please try again" });
-        return setErrorMessage(data.message || "Unknown error occurred");
+        dispatch(signInFailure(data.message));
       }
 
-      setLoading(false);
+      
       if (res.ok) {
+        dispatch(signInSucess(data))  
         toast({ title: "Sign in successful!" });
         navigate("/");
       }
     } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
+      
       toast({ title: "Something went wrong!" });
+      dispatch(signInFailure(error.message));
     }
   }
 
