@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
+import GoogleAuth from '@/components/shared/GoogleAuth';
 
 // Fix the schema for email validation
 const formSchema = z.object({
@@ -139,6 +140,7 @@ const SignUpForm = () => {
               <Button type="submit" className="w-full bg-blue-500" disabled={loading}>
                 {loading ? <span className="animate-pulse">Loading.....</span> : <span>Sign Up</span>}
               </Button>
+              <GoogleAuth/>
             </form>
           </Form>
 

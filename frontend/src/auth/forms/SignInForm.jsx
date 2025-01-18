@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from '@/hooks/use-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInStart, signInSucess } from '@/redux/user/userSlice';
+import GoogleAuth from '@/components/shared/GoogleAuth';
 
 // Fix the schema for email validation
 const formSchema = z.object({
@@ -126,6 +127,7 @@ const SignInForm = () => {
               <Button type="submit" className="w-full bg-blue-500" disabled={loading}>
                 {loading ? <span className="animate-pulse">Loading.....</span> : <span>Sign In</span>}
               </Button>
+              <GoogleAuth/>
             </form>
           </Form>
 

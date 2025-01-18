@@ -63,3 +63,43 @@ export const signin = async (req, res, next) => {
     next(error)
   }
 }
+export const google = async (req, res, next) => {
+  const { email, name, profilePhotoUrl } = req.body;
+
+  try {
+    if (!email || !name) {
+      return next(errorHandler(400, "Name and email are required"));
+    }
+
+    const user = await User.findOne({ email });
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const { password: pass, ...rest } = user._doc;
+      return res.status(200)
+        .cookie("access_token", token, { httpOnly: true })
+        .json(rest);
+    }
+
+    const formattedName = typeof name === 'string' ? name.toLowerCase().replace(/\s+/g, '') : 'defaultuser';
+    const generatedPassword =
+      Math.random().toString(36).slice(-8) +
+      Math.random().toString(36).slice(-8);
+    const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+
+    const newUser = new User({
+      username: formattedName + Math.random().toString(9).slice(-4),
+      email,
+      password: hashedPassword,
+      profilePicture: profilePhotoUrl,
+    });
+    await newUser.save();
+
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+    const { password: pass, ...rest } = newUser._doc;
+    res.status(200)
+      .cookie("access_token", token, { httpOnly: true })
+      .json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
