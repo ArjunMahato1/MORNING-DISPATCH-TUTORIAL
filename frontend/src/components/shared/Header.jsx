@@ -2,8 +2,20 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { FaSearch } from "react-icons/fa";
 import { Button } from '../ui/button';
+import { useSelector } from 'react-redux';
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuLabel,
+   DropdownMenuSeparator,
+   DropdownMenuTrigger,
+ } from "@/components/ui/dropdown-menu"
+ 
 
 const Header = () => {
+   const {currentUser} = useSelector((state) => state.user);
+   //console.log(currentUser)
   return (
     <header className="sticky shadow-1g">
         <div className="flex items-center justify-between p-4 mx-auto max-w-6x1 1g: max-w-7x1">
@@ -38,12 +50,43 @@ className="w-24 bg-transparent outline-none focus: sm:w-64"
  </Link>
  
  </ul>
- <Link to={"/sign-in"} >
- <Button>Sign In</Button>
- </Link>
+ {currentUser ? (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <div>
+        <img
+          src={currentUser.profilePicture}
+          alt="user photo"
+          className="w-10 h-10 rounded-full"
+        />
+      </div>
+    </DropdownMenuTrigger>
+
+    <DropdownMenuContent className="w-60">
+      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuSeparator className="bg-gray-400" />
+      <DropdownMenuItem className="block text-sm font-semibold">
+        <div className='flex flex-col gap-1'>
+          <span>@{currentUser.username}</span>
+          <span>@{currentUser.email}</span>
+
+        </div>
+      </DropdownMenuItem>
+      <DropdownMenuItem className="mt-2 font-semibold ">
+        <Link to="/dashboard?tab=profile" >Profile</Link>
+        </DropdownMenuItem>
+      <DropdownMenuItem className="mt-2 font-semibold ">Sign Out</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+) : (
+  <Link to="/sign-in">
+    <Button>Sign In</Button>
+  </Link>
+)}
 </div>
 </header>
   )
 }
+
 
 export default Header
