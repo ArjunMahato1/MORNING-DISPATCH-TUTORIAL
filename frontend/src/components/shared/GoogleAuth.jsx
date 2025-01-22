@@ -1,10 +1,10 @@
-import React from 'react';
-import { Button } from '../ui/button';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { app } from '@/firebase';
-import { useDispatch } from 'react-redux';
-import { signInSucess } from '@/redux/user/userSlice';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Button } from "../ui/button";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { app } from "@/firebase";
+import { useDispatch } from "react-redux";
+import { signInSucess } from "@/redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const GoogleAuth = () => {
   const auth = getAuth(app); // Initialize Firebase Auth
@@ -13,16 +13,16 @@ const GoogleAuth = () => {
 
   const handleGoogleClick = async () => {
     const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
-  
+    provider.setCustomParameters({ prompt: "select_account" });
+
     try {
       const firebaseResponse = await signInWithPopup(auth, provider);
       const userName = firebaseResponse.user.displayName || "Unknown User"; // Fallback if name is undefined
-  
-      const res = await fetch('/api/auth/google', {
-        method: 'POST',
+
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: userName, // Ensure name is always a string
@@ -30,19 +30,21 @@ const GoogleAuth = () => {
           profilePhotoUrl: firebaseResponse.user.photoURL,
         }),
       });
-  
+
       const data = await res.json();
       if (res.ok) {
         dispatch(signInSucess(data));
-        navigate('/');
+        navigate("/");
       } else {
-        console.error('Failed to authenticate with backend:', data.message || res.statusText);
+        console.error(
+          "Failed to authenticate with backend:",
+          data.message || res.statusText
+        );
       }
     } catch (error) {
-      console.error('Error during sign-in:', error);
+      console.error("Error during sign-in:", error);
     }
   };
-  
 
   return (
     <div>
