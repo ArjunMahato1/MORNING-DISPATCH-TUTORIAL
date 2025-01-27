@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.route.js';
 
+import userRoutes from './routes/user.route.js';
+
 dotenv.config();
 
 const app = express();
@@ -21,6 +23,8 @@ app.use(express.json())
 
 // Routes
 app.use('/api/auth', authRoutes)
+app.use('/api/user', userRoutes)
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
