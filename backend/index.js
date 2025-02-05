@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 
 import userRoutes from './routes/user.route.js';
 
+import postRoutes from './routes/post.route.js';
+
 
 dotenv.config();
 
@@ -27,6 +29,7 @@ app.use(cookieParser())
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
+app.use('/api/post', postRoutes)
 
 
 // Error handling middleware
