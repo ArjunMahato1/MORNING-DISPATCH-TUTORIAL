@@ -13,6 +13,7 @@ import PrivateRoute from "./components/shared/PrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import AdminPrivateRoute from "./components/shared/AdminPrivateRoute";
 import EditPost from "./pages/EditPost";
+import PostDetails from "./pages/PostDetails";
 
 const App = () => {
   return (
@@ -36,6 +37,8 @@ const App = () => {
         </Route>
 
         <Route path="/news" element={<NewsArticles />} />
+        <Route path="/post/:postSlug" element={<PostDetails />} />
+
       </Routes>
       <Toaster />
       <Footer />
