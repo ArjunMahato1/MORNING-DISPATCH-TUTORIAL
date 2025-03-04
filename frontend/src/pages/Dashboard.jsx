@@ -1,6 +1,6 @@
 import BottomNavBar from "@/components/shared/BottomNavBar";
 import DashboardComments from "@/components/shared/DashboardComments";
-import DashboardPosts from "@/components/shared/DashboardPosts ";
+import DashboardPosts from "@/components/shared/DashboardPosts";
 import DashboardProfile from "@/components/shared/DashboardProfile";
 import DashboardSidebar from "@/components/shared/DashboardSidebar";
 import DashboardUsers from "@/components/shared/DashboardUsers";
