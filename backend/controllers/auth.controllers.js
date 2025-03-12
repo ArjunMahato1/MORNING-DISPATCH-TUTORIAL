@@ -16,38 +16,70 @@ export const signup = async (req, res, next) => {
   ) {
     return next(errorHandler(400, "All fields are required"));
   }
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-  const user = new User({
-    username,
-    email,
-    password: hashedPassword,
-  });
+
   try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Hash password
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
+    // Create new user
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    // Save user
     await newUser.save();
-    res.json("Signup Sucessful");
+
+    // Create token
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+
+    // Remove password from response
+    const { password: pass, ...rest } = newUser._doc;
+
+    // Send response
+    res.status(201).json({
+      ...rest,
+      token,
+    });
   } catch (error) {
     next(error);
   }
 };
+
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
+
   if (!email || !password || email === "" || password === "") {
     return next(errorHandler(400, "All fields are required"));
   }
+
   try {
     const validUser = await User.findOne({ email });
+
     if (!validUser) {
       return next(errorHandler(404, "User not found"));
     }
+
     const validPassword = bcryptjs.compareSync(password, validUser.password);
+
     if (!validPassword) {
-      return next(errorHandler(400, "Wrong credencials"));
+      return next(errorHandler(400, "Wrong Credentials"));
     }
+
     const token = jwt.sign(
       { id: validUser._id, isAdmin: validUser.isAdmin },
       process.env.JWT_SECRET
     );
+
     const { password: pass, ...rest } = validUser._doc;
+
     res
       .status(200)
       .cookie("access_token", token, { httpOnly: true })
@@ -56,6 +88,7 @@ export const signin = async (req, res, next) => {
     next(error);
   }
 };
+
 export const google = async (req, res, next) => {
   const { email, name, profilePhotoUrl } = req.body;
 
@@ -67,36 +100,47 @@ export const google = async (req, res, next) => {
         { id: user._id, isAdmin: user.isAdmin },
         process.env.JWT_SECRET
       );
+
       const { password: pass, ...rest } = user._doc;
+
       return res
         .status(200)
-        .cookie("access_token", token, { httpOnly: true })
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
         .json(rest);
     }
 
     const generatedPassword =
       Math.random().toString(36).slice(-8) +
       Math.random().toString(36).slice(-8);
+
     const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
 
+    // sucide_machine
     const newUser = new User({
       username:
-        name.toLowerCase().split(" ").json("") +
+        name.toLowerCase().split(" ").join("") +
         Math.random().toString(9).slice(-4),
       email,
       password: hashedPassword,
       profilePicture: profilePhotoUrl,
     });
+
     await newUser.save();
 
     const token = jwt.sign(
       { id: newUser._id, isAdmin: newUser.isAdmin },
       process.env.JWT_SECRET
     );
+
     const { password: pass, ...rest } = newUser._doc;
+
     return res
       .status(200)
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
       .json(rest);
   } catch (error) {
     next(error);
