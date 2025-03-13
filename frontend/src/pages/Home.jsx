@@ -28,7 +28,7 @@ const Home = () => {
     <div>
       <div className="flex flex-col max-w-6xl gap-6 mx-auto p-28">
         <h1 className="text-4xl font-bold text-blue-800">
-          Welcome to <span className="text-red-600"> Morning Dispatch</span>
+          Welcome to <span className="text-red-600"> DailyNewzz</span>
         </h1>
 
         <p className="mt-3 text-lg text-gray-600">
@@ -48,7 +48,7 @@ const Home = () => {
       <section className="pb-16 bg-white">
         <div className="mx-auto text-center max-w-7xl">
           <h2 className="mb-8 text-4xl font-bold text-gray-800">
-            Why You'll Love Morning Dispatch
+            Why You'll Love DailyNewzz
           </h2>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
