@@ -6,10 +6,8 @@ return (
 <div className="py-8 bg-gray-800 Itext-white">
 <div className="container grid grid-cols-1 gap-8 px-6 mx-auto lg:px-8 md:grid-cols-3">
 {/* About Us */}
-
 <div>
 <h2 className="mb-4 text-lg font-semibold text-white">About Us</h2>
-
 <p className="text-sm text-gray-400">
 "We are dedicated to keeping you informed with reliable and timely news. Our mission is to empower lives by delivering accurate, engaging, and seamless digital experiences, tailored for today's fast-paced world." </p>
 </div>
